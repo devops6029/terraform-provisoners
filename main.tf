@@ -121,13 +121,15 @@ resource "azurerm_linux_virtual_machine" "example" {
 
         "sudo apt-get update",
         "sudo apt-get install -y nginx",
+        "echo '<html><body><h1>AZTerraform is Awesome, Done with Provisioners!</h1></body></html>' | sudo tee /var/www/html/index.html",
+
         "sudo systemctl start nginx",
         "sudo systemctl enable nginx"
      ]
 
      connection {
        type = "ssh"
-       user = "azureuser"
+       user = "adminuser"
        password = "Summer!23456"
        host = azurerm_public_ip.vm_ip.ip_address
      }
