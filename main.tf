@@ -24,7 +24,7 @@ resource "null_resource" "deployment_prep" {
   }
 
   provisioner "local-exec" {
-    command = "echo 'Deployment started at ${timestamp()}' > deployment-${timestamp()}.log"
+    command = "echo 'Deployment started at ${timestamp()}' > deployment.log"
 
   }
 }
