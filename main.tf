@@ -82,6 +82,10 @@ resource "azurerm_public_ip" "vm_ip" {
   allocation_method   = "Static"
 }
 
+resource "azurerm_network_interface_security_group_association" "example" {
+  network_interface_id      = azurerm_network_interface.example.id
+  network_security_group_id = azurerm_network_security_group.vm_nsg.id
+}
 
 resource "azurerm_linux_virtual_machine" "example" {
   name                = "example-machine"
@@ -110,10 +114,26 @@ resource "azurerm_linux_virtual_machine" "example" {
     sku       = "22_04-lts"
     version   = "latest"
   }
+
+
+  provisioner "remote-exec" {
+
+    inline = [ 
+
+        "sudo apt-get update",
+        "sudo apt-get install -y nginx",
+        "sudo systemctl start nginx",
+        "sudo systemctl enable nginx"
+     ]
+
+     connection {
+       type = "ssh"
+       user = "azureuser"
+       private_key = file("~/.ssh/id_rsa")
+       host = azurerm_public_ip.vm_ip.ip_address
+     }
+    
+  }
 }
 
 
-resource "azurerm_network_interface_security_group_association" "example" {
-  network_interface_id      = azurerm_network_interface.example.id
-  network_security_group_id = azurerm_network_security_group.vm_nsg.id
-}
