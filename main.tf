@@ -17,6 +17,18 @@ resource "azurerm_subnet" "example" {
   address_prefixes     = ["10.0.2.0/24"]
 }
 
+
+resource "null_resource" "deployment_prep" {
+  triggers = {
+    always_run = timestamp()
+  }
+
+  provisioner "local-exec" {
+    command = "echo 'Deployment started at ${timestamp()}' > deployment-${timestamp()}.log"
+
+  }
+}
+
 resource "azurerm_network_interface" "example" {
   name                = "example-nic"
   location            = azurerm_resource_group.example.location
@@ -76,6 +88,7 @@ resource "azurerm_linux_virtual_machine" "example" {
   resource_group_name = azurerm_resource_group.example.name
   location            = azurerm_resource_group.example.location
   size                = "Standard_D4s_v3"
+  depends_on = [ null_resource.deployment_prep ]
   admin_username      = "adminuser"
   network_interface_ids = [
     azurerm_network_interface.example.id,
