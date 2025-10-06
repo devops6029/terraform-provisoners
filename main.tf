@@ -95,6 +95,7 @@ resource "azurerm_linux_virtual_machine" "example" {
   depends_on = [ null_resource.deployment_prep ]
   admin_username      = "adminuser"
   admin_password = "Summer!23456"
+  disable_password_authentication = "false"
   network_interface_ids = [
     azurerm_network_interface.example.id,
   ]
