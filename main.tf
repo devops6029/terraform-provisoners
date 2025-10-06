@@ -94,14 +94,12 @@ resource "azurerm_linux_virtual_machine" "example" {
   size                = "Standard_D4s_v3"
   depends_on = [ null_resource.deployment_prep ]
   admin_username      = "adminuser"
+  admin_password = "Summer!23456"
   network_interface_ids = [
     azurerm_network_interface.example.id,
   ]
 
-  admin_ssh_key {
-    username   = "adminuser"
-    public_key = file("~/.ssh/id_rsa.pub")
-  }
+  
 
   os_disk {
     caching              = "ReadWrite"
@@ -129,7 +127,7 @@ resource "azurerm_linux_virtual_machine" "example" {
      connection {
        type = "ssh"
        user = "azureuser"
-       private_key = file("~/.ssh/id_rsa")
+       password = "Summer!23456"
        host = azurerm_public_ip.vm_ip.ip_address
      }
     
